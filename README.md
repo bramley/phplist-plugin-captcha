@@ -51,7 +51,7 @@ You also need to install the Securimage package from <https://www.phpcaptcha.org
 Expand the zip file, then copy the securimage directory to your web site.
 
 On the phplist Settings page, in the Captcha section, you must then specify the web path to the securimage directory.
-If you copied the Securimage package to the root of your web site then the path would be `/securimage`.
+For example, if you copied the Securimage package to the root of your web site then the path would be `/securimage`.
 
 ###Settings###
 
@@ -59,14 +59,24 @@ On the Settings page you can specify:
 
 * The path to the securimage directory on your web site (the default path is `/securimage`)
 * Whether to validate the email address using the BotBouncer class (the default is yes)
+* The prompt for the CAPTCHA field
 * The message to be displayed to the subscriber when the entered CAPTCHA is incorrect
 * The message to be displayed to the subscriber when the email address is rejected
 * Whether to write a record to the event log for each incorrect CAPTCHA and subscription attempt
 * Whether to send an email to the admin for each incorrect CAPTCHA and subscription attempt
 
+### Internationalisation ###
+
+If your subscribe pages are in a language other than English then on the Settings page you can change the prompt
+and messages that are displayed to the subscriber to be in the local language.
+
+Securimage supports a limited number of languages for the audio playback.
+See <a href="https://www.phpcaptcha.org/documentation/audio-file-settings/#language">Changing language files</a>
+for how to change the language.
+
 ###Test that it works###
 
-On your phplist subscription page enter all of the mandatory fields and the wrong value in the CAPTCHA field.
+On your phplist subscription page enter all of the mandatory fields and an incorrect value in the CAPTCHA field.
 The subscription attempt should be rejected.
 
 Go to <a href="http://www.stopforumspam.com/" target="_blank">Stop Forum Spam</a> and select an email address from the Hot Spam list.

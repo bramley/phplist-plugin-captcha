@@ -1,3 +1,6 @@
+version 2014-06-29
+      Avoid spurious plugin entries on the Dashboard page
+
 version 2014-06-23
       Initial version
 

@@ -166,6 +166,11 @@ END;
         parent::__construct();
     }
 
+    public function adminmenu()
+    {
+        return array();
+    }
+
     public function displaySubscriptionChoice($pageData, $userID = 0)
     {
         if ($this->captchaEnabled()) {

@@ -85,5 +85,6 @@ Then try to subscribe to your lists using that email address.
 ## Version history ##
 
     version     Description
+    2014-06-29  Minor change
     2014-06-23  Released to GitHub
     2014-06-19  Initial version using Securimage, based on existing BotBouncer plugin

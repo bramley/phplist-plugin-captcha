@@ -146,7 +146,8 @@ END;
     {
         $path = trim(getConfig('captcha_securimage_path'), '/');
 
-        if (!file_exists($f = $_SERVER['DOCUMENT_ROOT'] . "/$path/securimage.php")) {
+        if (!file_exists($f = rtrim($_SERVER['DOCUMENT_ROOT'], '/') . "/$path/securimage.php")) {
+            logEvent("securimage file '$f' not found");
             return false;
         }
 
@@ -180,6 +181,7 @@ END;
                 )
             );
         }
+        return '';
     }
         
     public function validateSubscriptionPage($pageData)

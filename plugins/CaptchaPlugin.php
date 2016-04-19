@@ -100,7 +100,9 @@ END;
         $bb = new Botbouncer();
         $bb->setLogRoot($tmpdir);
         $params = array(
-            'email' => $email
+            'email' => $email,
+            'username' => '',
+            'ips' => array(),
         );
 
         if (isset($_SERVER['REMOTE_ADDR'])) {

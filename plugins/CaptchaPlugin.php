@@ -169,6 +169,18 @@ END;
         parent::__construct();
     }
 
+    /**
+     * Provide the dependencies for enabling this plugin.
+     *
+     * @return array
+     */
+    public function dependencyCheck()
+    {
+        return array(
+            'curl extension installed' => extension_loaded('curl'),
+        );
+    }
+
     public function adminmenu()
     {
         return array();

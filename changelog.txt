@@ -1,3 +1,6 @@
+version 2.0.1+20161014
+      Add dependencies
+
 version 2.0.0+20160419
       Log event when securimage file not found
       Ensure that all parameters to BotBouncer are set

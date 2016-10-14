@@ -84,7 +84,8 @@ Then try to subscribe to your lists using that email address.
 
 ## Version history ##
 
-    version     Description
+    version         Description
+    2.0.1+20161014  Add dependencies
     2.0.0+20160419  Minor internal changes
     2014-06-29      Minor change
     2014-06-23      Released to GitHub

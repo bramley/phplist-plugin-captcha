@@ -20,6 +20,7 @@ proves not to be sufficient.
 Requires php version 5.2 or later.
 
 Requires the Securimage package to be installed.
+Also requires the php GD extension to be installed.
 
 ### Set the plugin directory ###
 You can use a directory outside of the web root by changing the definition of `PLUGIN_ROOTDIR` in config.php.
@@ -64,6 +65,8 @@ On the Settings page you can specify:
 * The message to be displayed to the subscriber when the email address is rejected
 * Whether to write a record to the event log for each incorrect CAPTCHA and subscription attempt
 * Whether to send an email to the admin for each incorrect CAPTCHA and subscription attempt
+
+For each subscribe page that you create you can select whether it should include a captcha field.
 
 ### Internationalisation ###
 

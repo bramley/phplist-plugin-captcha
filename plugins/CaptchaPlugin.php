@@ -7,7 +7,7 @@
  * @category  phplist
  *
  * @author    Duncan Cameron
- * @copyright 2011-2014 Duncan Cameron
+ * @copyright 2011-2016 Duncan Cameron
  * @license   http://www.gnu.org/licenses/gpl.html GNU General Public License, Version 3
  */
 
@@ -25,6 +25,7 @@ class CaptchaPlugin extends phplistPlugin
     public $name = 'Captcha Plugin';
     public $enabled = true;
     public $description = 'Creates a captcha field for subscription forms';
+    public $documentationUrl = 'https://resources.phplist.com/plugin/captcha';
     public $authors = 'Duncan Cameron';
     public $settings = array(
         'captcha_securimage_path' => array(
@@ -180,6 +181,7 @@ END;
     public function dependencyCheck()
     {
         return array(
+            'GD extension installed' => extension_loaded('gd'),
             'curl extension installed' => extension_loaded('curl'),
         );
     }
@@ -189,9 +191,17 @@ END;
         return array();
     }
 
+    /**
+     * Provide the captcha html to be included in a subscription page.
+     *
+     * @param array $pageData subscribe page fields
+     * @param int   $userID   user id
+     * 
+     * @return string
+     */
     public function displaySubscriptionChoice($pageData, $userID = 0)
     {
-        if ($this->captchaEnabled()) {
+        if (!empty($pageData['captcha_include']) && $this->captchaEnabled()) {
             return Securimage::getCaptchaHtml(
                 array(
                     'input_text' => getConfig('captcha_captcha_prompt'),
@@ -202,6 +212,14 @@ END;
         return '';
     }
 
+    /**
+     * Provide additional validation when a subscribe page has been submitted.
+     *
+     * @param array $pageData subscribe page fields
+     * 
+     * @return string an error message to be displayed or an empty string
+     *                when validation is successful.
+     */
     public function validateSubscriptionPage($pageData)
     {
         if (!isset($_POST['email'])) {
@@ -209,7 +227,7 @@ END;
         }
         $email = $_POST['email'];
 
-        if ($this->captchaEnabled()) {
+        if (!empty($pageData['captcha_include']) && $this->captchaEnabled()) {
             if ($r = $this->validateCaptcha($email, $_POST['captcha_code'])) {
                 return $r;
             }
@@ -222,5 +240,45 @@ END;
         }
 
         return '';
+    }
+
+    /**
+     * Provide html for the captcha options when editing a subscribe page.
+     *
+     * @param array $pageData subscribe page fields
+     * 
+     * @return string additional html
+     */
+    public function displaySubscribepageEdit($pageData)
+    {
+        $include = isset($pageData['captcha_include']) ? (bool) $pageData['captcha_include'] : true;
+        $html =
+            CHtml::label(s('Include captcha in the subscribe page'), 'captcha_include')
+            . CHtml::checkBox('captcha_include', $include, array('value' => 1, 'uncheckValue' => 0));
+
+        return $html;
+    }
+
+    /**
+     * Save the captcha settings.
+     *
+     * @param int $id subscribe page id
+     */
+    public function processSubscribePageEdit($id)
+    {
+        global $tables;
+
+        Sql_Query(
+            sprintf('
+                REPLACE INTO %s
+                (id, name, data)
+                VALUES
+                (%d, "captcha_include", "%s")
+                ',
+                $tables['subscribepage_data'],
+                $id,
+                $_POST['captcha_include']
+            )
+        );
     }
 }

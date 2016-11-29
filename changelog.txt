@@ -1,3 +1,8 @@
+version 2.1.0+20161129
+      Coding standards changes.
+      Allow captcha to be optionally included on each subscribe page.
+      Move usage guidance to the plugin's documentation page.
+
 version 2.0.1+20161014
       Add dependencies
 

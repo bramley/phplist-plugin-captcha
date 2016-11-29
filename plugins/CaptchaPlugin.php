@@ -1,11 +1,11 @@
 <?php
 /**
- * CaptchaPlugin for phplist
+ * CaptchaPlugin for phplist.
  * 
  * This file is a part of CaptchaPlugin.
  * 
  * @category  phplist
- * @package   CaptchaPlugin
+ *
  * @author    Duncan Cameron
  * @copyright 2011-2014 Duncan Cameron
  * @license   http://www.gnu.org/licenses/gpl.html GNU General Public License, Version 3
@@ -15,7 +15,6 @@
  * This class registers the plugin with phplist and hooks into the display and validation
  * of subscription pages.
  */
-
 class CaptchaPlugin extends phplistPlugin
 {
     const VERSION_FILE = 'version.txt';
@@ -28,55 +27,55 @@ class CaptchaPlugin extends phplistPlugin
     public $description = 'Creates a captcha field for subscription forms';
     public $authors = 'Duncan Cameron';
     public $settings = array(
-        'captcha_securimage_path' => array (
-          'description' => 'Path to the securimage directory (from the web root)',
-          'type' => 'text',
-          'value' => '/securimage',
-          'allowempty' => false,
-          'category'=> 'Captcha',
+        'captcha_securimage_path' => array(
+            'description' => 'Path to the securimage directory (from the web root)',
+            'type' => 'text',
+            'value' => '/securimage',
+            'allowempty' => false,
+            'category' => 'Captcha',
         ),
-        'captcha_bot_email' => array (
-          'description' => 'Whether to validate the email address using bot bouncer',
-          'type' => 'boolean',
-          'value' => '1',
-          'allowempty' => true,
-          'category'=> 'Captcha',
+        'captcha_bot_email' => array(
+            'description' => 'Whether to validate the email address using bot bouncer',
+            'type' => 'boolean',
+            'value' => '1',
+            'allowempty' => true,
+            'category' => 'Captcha',
         ),
-        'captcha_captcha_prompt' => array (
-          'value' => 'Please enter the text in the CAPTCHA image',
-          'description' => 'Prompt for the CAPTCHA field',
-          'type' => 'text',
-          'allowempty' => 0,
-          'category'=> 'Captcha',
+        'captcha_captcha_prompt' => array(
+            'value' => 'Please enter the text in the CAPTCHA image',
+            'description' => 'Prompt for the CAPTCHA field',
+            'type' => 'text',
+            'allowempty' => 0,
+            'category' => 'Captcha',
         ),
-        'captcha_captcha_message' => array (
-          'value' => 'The CAPTCHA value that you entered was incorrect',
-          'description' => 'Message to be displayed when entered CAPTCHA is incorrect',
-          'type' => 'text',
-          'allowempty' => 0,
-          'category'=> 'Captcha',
+        'captcha_captcha_message' => array(
+            'value' => 'The CAPTCHA value that you entered was incorrect',
+            'description' => 'Message to be displayed when entered CAPTCHA is incorrect',
+            'type' => 'text',
+            'allowempty' => 0,
+            'category' => 'Captcha',
         ),
-        'captcha_bot_message' => array (
-          'value' => 'You cannot subscribe with this email address',
-          'description' => 'Message to be displayed when email address is rejected',
-          'type' => 'text',
-          'allowempty' => 0,
-          'category'=> 'Captcha',
+        'captcha_bot_message' => array(
+            'value' => 'You cannot subscribe with this email address',
+            'description' => 'Message to be displayed when email address is rejected',
+            'type' => 'text',
+            'allowempty' => 0,
+            'category' => 'Captcha',
         ),
-        'captcha_eventlog' => array (
-          'description' => 'Whether to log event for each rejected captcha and each rejected subscription',
-          'type' => 'boolean',
-          'value' => '1',
-          'allowempty' => true,
-          'category'=> 'Captcha',
+        'captcha_eventlog' => array(
+            'description' => 'Whether to log event for each rejected captcha and each rejected subscription',
+            'type' => 'boolean',
+            'value' => '1',
+            'allowempty' => true,
+            'category' => 'Captcha',
         ),
-        'captcha_copyadmin' => array (
-          'description' => 'Whether to send an email to the admin for each rejected captcha and each rejected subscription',
-          'type' => 'boolean',
-          'value' => '0',
-          'allowempty' => true,
-          'category'=> 'Captcha',
-        )
+        'captcha_copyadmin' => array(
+            'description' => 'Whether to send an email to the admin for each rejected captcha and each rejected subscription',
+            'type' => 'boolean',
+            'value' => '0',
+            'allowempty' => true,
+            'category' => 'Captcha',
+        ),
     );
 /*
  * Private functions
@@ -122,6 +121,7 @@ END;
         if (getConfig('captcha_copyadmin')) {
             $this->sendAdminEmail($text);
         }
+
         return getConfig('captcha_bot_message');
     }
 
@@ -141,6 +141,7 @@ END;
         if (getConfig('captcha_copyadmin')) {
             $this->sendAdminEmail($text);
         }
+
         return getConfig('captcha_captcha_message');
     }
 
@@ -150,10 +151,12 @@ END;
 
         if (!file_exists($f = rtrim($_SERVER['DOCUMENT_ROOT'], '/') . "/$path/securimage.php")) {
             logEvent("securimage file '$f' not found");
+
             return false;
         }
 
         include_once $f;
+
         return true;
     }
 
@@ -191,13 +194,14 @@ END;
         if ($this->captchaEnabled()) {
             return Securimage::getCaptchaHtml(
                 array(
-                    'input_text' => getConfig('captcha_captcha_prompt')
+                    'input_text' => getConfig('captcha_captcha_prompt'),
                 )
             );
         }
+
         return '';
     }
-        
+
     public function validateSubscriptionPage($pageData)
     {
         if (!isset($_POST['email'])) {
@@ -216,6 +220,7 @@ END;
                 return $r;
             }
         }
+
         return '';
     }
 }

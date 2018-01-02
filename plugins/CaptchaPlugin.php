@@ -1,9 +1,9 @@
 <?php
 /**
  * CaptchaPlugin for phplist.
- * 
+ *
  * This file is a part of CaptchaPlugin.
- * 
+ *
  * @category  phplist
  *
  * @author    Duncan Cameron
@@ -78,9 +78,10 @@ class CaptchaPlugin extends phplistPlugin
             'category' => 'Captcha',
         ),
     );
-/*
- * Private functions
- */
+
+    /*
+     * Private functions
+     */
     private function sendAdminEmail($text)
     {
         $body = <<<END
@@ -161,9 +162,9 @@ END;
         return true;
     }
 
-/*
- * Public functions
- */
+    /*
+     * Public functions
+     */
     public function __construct()
     {
         $this->coderoot = dirname(__FILE__) . '/' . __CLASS__ . '/';
@@ -197,7 +198,7 @@ END;
      *
      * @param array $pageData subscribe page fields
      * @param int   $userID   user id
-     * 
+     *
      * @return string
      */
     public function displaySubscriptionChoice($pageData, $userID = 0)
@@ -217,9 +218,9 @@ END;
      * Provide additional validation when a subscribe page has been submitted.
      *
      * @param array $pageData subscribe page fields
-     * 
+     *
      * @return string an error message to be displayed or an empty string
-     *                when validation is successful.
+     *                when validation is successful
      */
     public function validateSubscriptionPage($pageData)
     {
@@ -247,7 +248,7 @@ END;
      * Provide html for the captcha options when editing a subscribe page.
      *
      * @param array $pageData subscribe page fields
-     * 
+     *
      * @return string additional html
      */
     public function displaySubscribepageEdit($pageData)

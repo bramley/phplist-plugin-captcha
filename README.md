@@ -37,6 +37,7 @@ For advice on configuring and using the plugin see the documentation page <https
 ## Version history ##
 
     version         Description
+    2.1.1+20180102  Update dependencies
     2.1.0+20161129  Allow captcha to be optionally included on each subscribe page
     2.0.1+20161014  Add dependencies
     2.0.0+20160419  Minor internal changes

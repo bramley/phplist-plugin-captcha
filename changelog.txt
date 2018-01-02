@@ -1,3 +1,7 @@
+version 2.1.1+20180102
+      Update dependencies.
+      Coding standards changes
+
 version 2.1.0+20161129
       Coding standards changes.
       Allow captcha to be optionally included on each subscribe page.

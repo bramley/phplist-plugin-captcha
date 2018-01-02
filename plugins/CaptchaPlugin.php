@@ -183,6 +183,7 @@ END;
         return array(
             'GD extension installed' => extension_loaded('gd'),
             'curl extension installed' => extension_loaded('curl'),
+            'Common Plugin installed' => phpListPlugin::isEnabled('CommonPlugin'),
         );
     }
 

@@ -9,10 +9,10 @@ This plugin provides a CAPTCHA field on subscription forms using the
 
 ### Dependencies ###
 
-Requires php version 5.4 or later.
+Requires php version 5.4 or later and the php GD extension to be installed.
 
 Requires the Securimage package to be installed.
-Also requires the php GD extension to be installed.
+Also requires Common Plugin to be installed,  see <https://github.com/bramley/phplist-plugin-common>
 
 ### Set the plugin directory ###
 You can use a directory outside of the web root by changing the definition of `PLUGIN_ROOTDIR` in config.php.

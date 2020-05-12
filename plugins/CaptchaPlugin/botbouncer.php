@@ -4,15 +4,15 @@
  *
  * The purpose of this class is to have a single interface to multiple anti-comment-spam services on the internet.
  * That way, you can write your application code to check for spam and decide which of the services to use
- * to actually identify the spam. 
- * 
- * 
+ * to actually identify the spam.
+ *
+ *
  * Currently supported:
- * 
+ *
  * StopForumSpam: http://www.stopforumspam.com
- * 
+ *
  * Project Honeypot: http://www.projecthoneypot.org
- * 
+ *
  * Akismet: http://www.akismet.com
  *
  * Mollom: http://www.mollom.com
@@ -20,14 +20,14 @@
  * @author Michiel Dethmers, phpList Ltd, http://www.phplist.com
  * @version 0.3 - Apr 23, 2013 - renamed Botbouncer (from FormspamCheck.class)
  * @version 0.2 - Sept 8th 2011 - added Mollom support
- * 
+ *
  * version 0.1 - 24 August 2011
  * @license LGPL (Lesser Gnu Public License) http://www.gnu.org/licenses/lgpl-3.0.html
  * @package Botbouncer
  * Free to use, distribute and modify in Open as well as Closed Source software
  * NO WARRANTY WHATSOEVER!
  * ---------------
- * 
+ *
  * For more information and how to set up and configure, http://www.botbouncer.org/
  *
  * It currently uses three services, stopforumspam.com, project honeypot and akismet
@@ -35,8 +35,8 @@
  *
  * Credits: Very loosely based on the original phpBB mod from "microUgly"
  * http://www.phpbb.com/community/viewtopic.php?f=70&t=1349145
- * 
- * 
+ *
+ *
  */
 
 
@@ -46,10 +46,10 @@
  * Check form submission against multipe spam protection sources
  *
  * @example example.php
- * 
+ *
  * @package Botbouncer
  * @subpackage classes
- * 
+ *
  */
 class Botbouncer {
 
@@ -67,7 +67,7 @@ class Botbouncer {
   private $debugToLog = true;
   private $UA = 'Botbouncer (v.0.3)';
   // The StopFormSpam API URL
-  private $stopSpamAPIUrl = 'http://www.stopforumspam.com/api';
+  private $stopSpamAPIUrl = 'http://api.stopforumspam.org/api';
   private $startTime = 0;
   private $mollomCheck = '';
   private $mollomEnabled = false;
@@ -75,18 +75,18 @@ class Botbouncer {
   /**
    * (array) matchDetails - further details on a match provided by SFS
    */
-  
+
   public $matchDetails = '';
 
   /**
    * (string) matchedBy - which service returned the match when isSpam returns true
-   */ 
+   */
 
   public $matchedBy = '';
 
   /**
    * (string) matchedOn - what field was matched when isSpam returns true
-   */ 
+   */
 
   public $matchedOn = '';
 
@@ -101,20 +101,20 @@ class Botbouncer {
     'AKI' => 'Akismet',
     'MOL' => 'Mollom',
   );
-  
+
   private $sfsSpamTriggers = array ( ## set a default, in case it's not in config
-    'username' => array ( 
-      'ban_end' => FALSE, 
-      'freq_tolerance' => 2, 
+    'username' => array (
+      'ban_end' => FALSE,
+      'freq_tolerance' => 2,
       'ban_reason' => 'You have been identified as a spammer.',
     ),
-    'email' => array ( 
-      'ban_end' => FALSE, 
+    'email' => array (
+      'ban_end' => FALSE,
       'freq_tolerance' => 0,
       'ban_reason' => 'You have been identified as a spammer.',
     ),
-    'ip' => array (  
-      'ban_end' => 604800,// 7 days  
+    'ip' => array (
+      'ban_end' => 604800,// 7 days
       'freq_tolerance' => 1,
       'ban_reason' => 'You have been identified as a spammer.',
     )
@@ -143,7 +143,7 @@ class Botbouncer {
    *
    * initialise class with services available. There's no need to use all, if any service is not
    * configured, the check for it will be disabled automatically
-   * 
+   *
    * @param string $hpKey - API key for Honeypot Project
    * @param string $akismetKey - API key for Akismet service
    * @param string $akismetUrl - BlogURL for Akismet service
@@ -178,7 +178,7 @@ class Botbouncer {
     } elseif (!empty($_SERVER['HTTP_HOST'])) {
       $this->akismetBlogURL = $_SERVER['HTTP_HOST'];
     }
-    
+
     if (!empty($GLOBALS['logRoot']) && is_writable($GLOBALS['logRoot'])) {
       $this->logRoot = $GLOBALS['logRoot'];
     }
@@ -233,7 +233,7 @@ class Botbouncer {
     } else {
       $this->dbg('mollom not enabled');
     }
-    
+
     $now = gettimeofday();
     $this->startTime = $now['sec'] * 1000000 + $now['usec'];
   }
@@ -306,7 +306,6 @@ class Botbouncer {
     if (!$this->logActivity) return;
     $logFile = basename($logFile,'.log');
     if (!is_writable($this->logRoot)) {
-     # $this->dbg('cannot write logfile '.$this->logRoot.'/'.$logFile.date('Y-m-d').'.log');
       return;
     }
     $ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : ' - ';
@@ -412,7 +411,7 @@ class Botbouncer {
    * mollomCheck - check data against mollom
    *
    * @param array $data - associative array with data to use for checking
-   * 
+   *
    * @return bool: true is spam, false is ham
    */
 
@@ -429,7 +428,7 @@ class Botbouncer {
         $isSpam = $this->mollomCheck->checkContent(
           '', # sessionID
           '', # $postTitle
-          $data['content'], # $postBody 
+          $data['content'], # $postBody
           $data['username'], # $authorName
           $data['url'], # $authorUrl
           $data['email'], # authorEmail
@@ -463,9 +462,9 @@ class Botbouncer {
    * akismetCheck - check data against akismet
    *
    * @param array $data - associative array with data to use for checking
-   * 
+   *
    * possible keys for data (all optional): blog, user_ip, user_agent, referrer, permalink, comment_type, comment_author, comment_author_email, comment_author_url, comment_content
-   * 
+   *
    * @return bool: true is spam, false is ham
    */
 
@@ -480,7 +479,7 @@ class Botbouncer {
     $data['comment_author'] = !empty($data['username']) ? $data['username'] : $this->defaults('username');
     $data['comment_author_email'] = !empty($data['email']) ? $data['email'] : $this->defaults('email');
     $data['comment_content'] = !empty($data['content']) ? $data['content'] : $this->defaults('content');
-        
+
     foreach ($this->akismetFields as $field) {
       if (!isset($data[$field])) {
         switch ($field) {
@@ -527,7 +526,7 @@ class Botbouncer {
    */
   private function doPOST($url,$requestdata = array()) {
     $date = date('r');
-    
+
     $requestheader = array(
       'Host: '.parse_url($url,PHP_URL_HOST),
       'Content-Type: application/x-www-form-urlencoded',
@@ -541,7 +540,7 @@ class Botbouncer {
     }
     $data = substr($data,0,-1);
     $requestheader[] = 'Content-Length: '.strlen($data);
-     
+
     $header = '';
     foreach ($requestheader as $param) {
       $header .= $param.$this->LE;
@@ -551,15 +550,15 @@ class Botbouncer {
     curl_setopt($curl, CURLOPT_URL, $url);
     curl_setopt($curl, CURLOPT_TIMEOUT, 30);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE); 
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
     curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
     curl_setopt($curl, CURLOPT_HTTPHEADER,$requestheader);
-    curl_setopt($curl, CURLOPT_DNS_USE_GLOBAL_CACHE, TRUE); 
+    curl_setopt($curl, CURLOPT_DNS_USE_GLOBAL_CACHE, TRUE);
     curl_setopt($curl, CURLOPT_USERAGENT,$this->UA);
     curl_setopt($curl, CURLOPT_POST, 1);
 
     curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-        
+
     $result = curl_exec($curl);
     $status = curl_getinfo($curl,CURLINFO_HTTP_CODE);
     if ($status != 200) {
@@ -590,39 +589,39 @@ class Botbouncer {
    * defaults to:
    *
    * array (
-   * 
+   *
    *  'username' => array (               // ban on username
-   * 
+   *
    *    'ban_end' => FALSE,               // Permanent ban
-   * 
+   *
    *    'freq_tolerance' => 2,            // allow when 2 or less in the frequency API field
-   * 
+   *
    *    'ban_reason' => 'Error processing data, please try again', ## let's not make them any wiser
-   * 
+   *
    *   ),
-   * 
+   *
    *  'email' => array (                  // ban on email
-   * 
+   *
    *    'ban_end' => FALSE,               // Permanent ban
-   * 
+   *
    *    'freq_tolerance' => 0,
-   * 
+   *
    *    'ban_reason' => 'Error processing data, please try again', ## let's not make them any wiser
-   * 
+   *
    *  ),
-   * 
+   *
    *  'ip' => array (                     // ban on ip address
-   * 
+   *
    *    'ban_end' => 630000,              // 60*60*24*7 ban for 7 days
-   * 
+   *
    *    'freq_tolerance' => 1,
-   * 
+   *
    *    'ban_reason' => 'Error processing data, please try again', ## let's not make them any wiser
-   * 
+   *
    *  )
-   * 
+   *
    *);
-   * 
+   *
    *
    * @returns null
    *
@@ -644,7 +643,7 @@ class Botbouncer {
    *
    * $data['username'] - (string) username to check
    *
-   * $data['ips'] - (array) list of IPs to check 
+   * $data['ips'] - (array) list of IPs to check
    *
    * $data['email'] - (string) email to check
    *
@@ -659,7 +658,7 @@ class Botbouncer {
         $data['ips'][] = $_SERVER['HTTP_X_FORWARDED_FOR'];
       }
     }
-    
+
     $isSfsSpam = 0;
     $this->dbg('SFS check');
 
@@ -698,7 +697,7 @@ class Botbouncer {
       $cUrl = $this->stopSpamAPIUrl.'?'.$apiRequest.'&unix';
       $this->addLogEntry('sfs-apicall.log',$cUrl);
       $xml = $this->doGET($cUrl);
-          
+
       if (!$xml) {
         $this->addLogEntry('sfs-apicall.log','FAIL ON XML');
         return false;
@@ -709,9 +708,9 @@ class Botbouncer {
       $xml = $cached;
       $cached = '(cached)'; // for logging
     }
-    ## the resulting XML is an 
+    ## the resulting XML is an
     $response = simplexml_load_string($xml);
-    
+
   #  var_dump($response);exit;
     $spamMatched = array();
     if ($response->success) {
@@ -761,25 +760,25 @@ class Botbouncer {
    * isSpam - match submission against spam protection sources
    * @param array $data - array containing information
    * structure:
-   * 
+   *
    *    $data['email'] = (string) email address
-   * 
+   *
    *    $data['username'] = (string) username
-   * 
+   *
    *    $data['ips'] = array ('ip1','ip2')
-   * 
+   *
    *    $data['user_agent'] = (string) Browser Agent
-   * 
+   *
    *    $data['referrer'] = (string) referring URL
-   * 
+   *
    *    $data['content'] = (string) Other content
-   * 
+   *
    * @param bool $checkAll - continue checking other services
-   * 
+   *
    *  true - check against all services
-   * 
+   *
    *  false - only check next service if previous one returned ham
-   * 
+   *
    * @return integer - number of services that returned "spam" status. If checkAll is false will be 0 or 1
    */
 
@@ -797,7 +796,7 @@ class Botbouncer {
     }
     $isSpam = 0;
     $servicesMatched = array();
-    
+
     ## honeypot will be fastest
     if ($this->doHpCheck && !empty($data['ips'])) {
       $this->dbg('hpCheck');
@@ -859,7 +858,7 @@ class Botbouncer {
     $isSpam = 1;
     $servicesMatched = array_keys($this->services);
 */
-    
+
     if ($isSpam) {
       ## Add a log to graph a comparison: a hit on SVC1 -> hit or miss in SVC2?
       foreach (array_keys($this->services) as $svcMain) {

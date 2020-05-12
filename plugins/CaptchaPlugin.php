@@ -96,7 +96,7 @@ END;
     {
         global $tmpdir;
 
-        include $this->coderoot . 'botbouncer.php';
+        require_once $this->coderoot . 'botbouncer.php';
 
         $bb = new Botbouncer();
         $bb->setLogRoot($tmpdir);

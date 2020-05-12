@@ -1,3 +1,6 @@
+version 2.1.2+20200512
+      Update botbouncer class.
+
 version 2.1.1+20180102
       Update dependencies.
       Coding standards changes

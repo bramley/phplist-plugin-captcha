@@ -37,6 +37,7 @@ For advice on configuring and using the plugin see the documentation page <https
 ## Version history ##
 
     version         Description
+    2.1.3+20200515  Make the dependency check message clearer
     2.1.2+20200512  Update botbouncer class
     2.1.1+20180102  Update dependencies
     2.1.0+20161129  Allow captcha to be optionally included on each subscribe page

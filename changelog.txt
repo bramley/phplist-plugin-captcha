@@ -1,3 +1,6 @@
+version 2.1.4+20200712
+      Revise readme to explain the necessary change to securimage code
+
 version 2.1.3+20200515
       Make the dependency check message clearer
 

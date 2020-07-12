@@ -27,6 +27,9 @@ You also need to install the Securimage package from <https://www.phpcaptcha.org
 
 Expand the zip file, then copy the securimage directory to your web site.
 
+You need to make a small change to the securimage code which is explained on the documentation page
+<https://resources.phplist.com/plugin/captcha#change_to_the_securimage_code>
+
 On the phplist Settings page, in the Captcha section, you must then specify the web path to the securimage directory.
 For example, if you copied the Securimage package to the root of your web site then the path would be `/securimage`.
 
@@ -37,6 +40,7 @@ For advice on configuring and using the plugin see the documentation page <https
 ## Version history ##
 
     version         Description
+    2.1.4+20200712  Revise readme to explain the necessary change to securimage code
     2.1.3+20200515  Make the dependency check message clearer
     2.1.2+20200512  Update botbouncer class
     2.1.1+20180102  Update dependencies

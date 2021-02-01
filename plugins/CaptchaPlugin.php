@@ -224,6 +224,10 @@ END;
      */
     public function validateSubscriptionPage($pageData)
     {
+        if ($_GET['p'] == 'asubscribe' && !empty($pageData['captcha_not_asubscribe'])) {
+            return '';
+        }
+
         if (!isset($_POST['email'])) {
             return '';
         }
@@ -254,9 +258,12 @@ END;
     public function displaySubscribepageEdit($pageData)
     {
         $include = isset($pageData['captcha_include']) ? (bool) $pageData['captcha_include'] : true;
+        $notAsubscribe = isset($pageData['captcha_not_asubscribe']) ? (bool) $pageData['captcha_not_asubscribe'] : true;
         $html =
             CHtml::label(s('Include captcha in the subscribe page'), 'captcha_include')
-            . CHtml::checkBox('captcha_include', $include, array('value' => 1, 'uncheckValue' => 0));
+            . CHtml::checkBox('captcha_include', $include, array('value' => 1, 'uncheckValue' => 0))
+            . CHtml::label(s('Do not validate captcha for asubscribe'), 'captcha_not_asubscribe')
+            . CHtml::checkBox('captcha_not_asubscribe', $notAsubscribe, array('value' => 1, 'uncheckValue' => 0));
 
         return $html;
     }
@@ -275,11 +282,14 @@ END;
                 REPLACE INTO %s
                 (id, name, data)
                 VALUES
-                (%d, "captcha_include", "%s")
+                (%d, "captcha_include", "%s"),
+                (%d, "captcha_not_asubscribe", "%s")
                 ',
                 $tables['subscribepage_data'],
                 $id,
-                $_POST['captcha_include']
+                $_POST['captcha_include'],
+                $id,
+                $_POST['captcha_not_asubscribe']
             )
         );
     }

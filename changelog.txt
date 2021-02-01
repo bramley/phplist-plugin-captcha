@@ -1,3 +1,6 @@
+version 2.2.0+20210201
+      Add subscribe page option to not validate captcha for asubscribe.
+
 version 2.1.4+20200712
       Revise readme to explain the necessary change to securimage code
 

@@ -40,6 +40,7 @@ For advice on configuring and using the plugin see the documentation page <https
 ## Version history ##
 
     version         Description
+    2.2.1+20210428  Allow the plugin to be a dependency of phplist
     2.2.0+20210201  Add subscribe page option to not validate captcha for asubscribe
     2.1.4+20200712  Revise readme to explain the necessary change to securimage code
     2.1.3+20200515  Make the dependency check message clearer

@@ -1,3 +1,6 @@
+version 2.2.2+20220220
+      Change default for "include on subscribe page" to be false so that it has to be explicitly selected.
+
 version 2.2.1+20210428
       Allow the plugin to be a dependency of phplist.
 

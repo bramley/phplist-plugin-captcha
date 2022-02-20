@@ -40,6 +40,7 @@ For advice on configuring and using the plugin see the documentation page <https
 ## Version history ##
 
     version         Description
+    2.2.2+20220220  Change default for "include on subscribe page" to be false
     2.2.1+20210428  Allow the plugin to be a dependency of phplist
     2.2.0+20210201  Add subscribe page option to not validate captcha for asubscribe
     2.1.4+20200712  Revise readme to explain the necessary change to securimage code

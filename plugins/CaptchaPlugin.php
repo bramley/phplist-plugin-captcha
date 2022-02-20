@@ -257,7 +257,7 @@ END;
      */
     public function displaySubscribepageEdit($pageData)
     {
-        $include = isset($pageData['captcha_include']) ? (bool) $pageData['captcha_include'] : true;
+        $include = isset($pageData['captcha_include']) ? (bool) $pageData['captcha_include'] : false;
         $notAsubscribe = isset($pageData['captcha_not_asubscribe']) ? (bool) $pageData['captcha_not_asubscribe'] : true;
         $html =
             CHtml::label(s('Include captcha in the subscribe page'), 'captcha_include')

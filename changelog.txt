@@ -1,3 +1,6 @@
+version 2.2.3+20220310
+      Ensure that the response from stopforumspam is serialised as expected.
+
 version 2.2.2+20220220
       Change default for "include on subscribe page" to be false so that it has to be explicitly selected.
 

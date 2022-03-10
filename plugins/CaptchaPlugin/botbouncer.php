@@ -694,7 +694,7 @@ class Botbouncer {
 
     $cached = $this->getCache('SFS'.$apiRequest);
     if (!$cached) {
-      $cUrl = $this->stopSpamAPIUrl.'?'.$apiRequest.'&unix';
+      $cUrl = $this->stopSpamAPIUrl.'?'.$apiRequest.'xmldom&unix';
       $this->addLogEntry('sfs-apicall.log',$cUrl);
       $xml = $this->doGET($cUrl);
 

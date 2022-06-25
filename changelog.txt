@@ -1,3 +1,6 @@
+version 2.3.0+20220625
+      Update the Botbouncer class from the michield/botbouncer repository.
+
 version 2.2.3+20220310
       Ensure that the response from stopforumspam is serialised as expected.
 

@@ -55,6 +55,7 @@ class Botbouncer {
 
   /** var LE - line ending */
   private $LE = "\n";
+  private $sfsEnabled = true;
   private $honeyPotApiKey = '';
   private $akismetApiKey = '';
   private $akismetBlogURL = 'http://www.yoursite.com';
@@ -67,10 +68,14 @@ class Botbouncer {
   private $debugToLog = true;
   private $UA = 'Botbouncer (v.0.3)';
   // The StopFormSpam API URL
-  private $stopSpamAPIUrl = 'http://api.stopforumspam.org/api';
+  private $stopSpamAPIUrl = 'https://api.stopforumspam.org/api';
   private $startTime = 0;
   private $mollomCheck = '';
   private $mollomEnabled = false;
+  private $ipIntelEnabled = false;
+  private $ipIntelAPIUrl = 'http://check.getipintel.net/check.php';
+  private $ipIntelContact = ''; // IP Intel requires a contact e-mail address
+  private $ipIntelSpamThreshold = 0.99; // Per API's recommendation for automated systems
 
   /**
    * (array) matchDetails - further details on a match provided by SFS
@@ -100,6 +105,7 @@ class Botbouncer {
     'HP' => 'Honeypot Project',
     'AKI' => 'Akismet',
     'MOL' => 'Mollom',
+    'IPI' => 'IP Intel'
   );
 
   private $sfsSpamTriggers = array ( ## set a default, in case it's not in config
@@ -147,10 +153,11 @@ class Botbouncer {
    * @param string $hpKey - API key for Honeypot Project
    * @param string $akismetKey - API key for Akismet service
    * @param string $akismetUrl - BlogURL for Akismet service
+   * @param string $ipIntelContact - Contact email for IP Intel
    *
    */
 
-  public function __construct($hpKey = '',$akismetKey = '',$akismetUrl = '', $mollomPrivateKey = '',$mollomPublicKey = '') {
+  public function __construct($hpKey = '',$akismetKey = '',$akismetUrl = '', $mollomPrivateKey = '',$mollomPublicKey = '', $ipIntelContact = '') {
     if (!function_exists('curl_init')) {
       print 'curl dependency error';
       return;
@@ -179,11 +186,22 @@ class Botbouncer {
       $this->akismetBlogURL = $_SERVER['HTTP_HOST'];
     }
 
+    if (!empty($ipIntelContact)) {
+        $this->ipIntelContact = $ipIntelContact;
+        $this->ipIntelEnabled = true;
+    } elseif (!empty($GLOBALS['ipIntelContact'])) {
+        $this->ipIntelContact = $GLOBALS['ipIntelContact'];
+        $this->ipIntelEnabled = true;
+    }
+
     if (!empty($GLOBALS['logRoot']) && is_writable($GLOBALS['logRoot'])) {
       $this->logRoot = $GLOBALS['logRoot'];
     }
     if (isset($GLOBALS['ForumSpamBanTriggers'])) {
       $this->spamTriggers = $GLOBALS['ForumSpamBanTriggers'];
+    }
+    if (isset($GLOBALS['sfsEnabled'])) {
+      $this->sfsEnabled = (bool) $GLOBALS['sfsEnabled'];
     }
 
     if (isset($GLOBALS['memCachedServer']) && class_exists('Memcached', false)) {
@@ -755,6 +773,65 @@ class Botbouncer {
     return $isSfsSpam;
   }
 
+  /**
+   * ipIntelCheck - check with IP Intel Database API
+   * @param string $ip -- IP to check.  If null, will try to pull from $_SERVER vars
+   * @return boolean If within bad IP detection threshold.
+   */
+  function ipIntelCheck($ip) {
+
+    if ((!isset($ip) || $ip == "") && isset($_SERVER['REMOTE_ADDR'])) {
+      $ip = $_SERVER['REMOTE_ADDR'];
+      if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+      }
+    }
+
+    $this->dbg('IPI check');
+    $this->addLogEntry('ipi-apicall.log','IPI Check on ' . $ip);
+
+    $resultNumeric = null;
+    $cached = $this->getCache('IPI'.$ip);
+    if (!$cached) {
+      $cUrl = $this->ipIntelAPIUrl . '?ip=' . urlencode($ip) . '&contact=' . urlencode($this->ipIntelContact);
+      $this->addLogEntry('ipi-apicall.log',$cUrl);
+      $resultString = $this->doGET($cUrl);
+
+      if (!is_numeric($resultString))
+      {
+        $this->addLogEntry('ipi-apicall.log','API returned non-number');
+        return false;
+      }
+
+      $resultNumeric = (float) $resultString;
+
+      if ($resultNumeric < 0) {
+        $this->addLogEntry('ipi-apicall.log','API returned error code: ' . $resultNumeric);
+        return false;
+      }
+
+      $this->setCache('IPI'.$ip,$resultNumeric);
+      $cached = ''; // for logging
+    } else {
+      $resultNumeric = $cached;
+      $cached = '(cached)'; // for logging
+    }
+
+    if (is_null($resultNumeric) || $resultNumeric < 0 || $resultNumeric > 1)
+    {
+        $this->addLogEntry('ipi-apicall.log','API or cache returned out of bounds result: ' . $resultNumeric);
+        return false;
+    }
+
+    if ($resultNumeric > $this->ipIntelSpamThreshold)
+    {
+        $this->dbg('SFS check SPAM');
+        $this->addLogEntry('ipi-apicall.log','SPAM IP detected: ' . $ip . ' --- score is: ' . $resultNumeric);
+        return true;
+    }
+      return false;
+  }
+
 
   /**
    * isSpam - match submission against spam protection sources
@@ -817,7 +894,7 @@ class Botbouncer {
         $this->addLogEntry('munin-graph.log','HPHAM');
       }
     }
-    if ((!$isSpam || $checkAll)) {
+    if ((!$isSpam || $checkAll) && $this->sfsEnabled) {
       $num = $this->stopForumSpamCheck($data);
       if ($num) {
         $this->matchedBy = 'Stop Forum Spam';
@@ -852,6 +929,35 @@ class Botbouncer {
         $this->addLogEntry('munin-graph.log','MOLHAM');
       }
     }
+
+    if ((!$isSpam || $checkAll) && $this->ipIntelEnabled) {
+
+        $isIPIntelSpam = false;
+        if (empty($data['ips']))
+        {
+            if ($this->ipIntelCheck('')) // Will attempt to use HTTP Headers
+            {
+                $isIPIntelSpam = true;
+            }
+        } else {
+            foreach ($data['ips'] as $ip) {
+                if ($this->ipIntelCheck($ip))
+                {
+                    $isIPIntelSpam = true;
+                }
+            }
+        }
+
+        if ($isIPIntelSpam)
+        {
+            $this->matchedBy = 'IP Intel';
+            $servicesMatched[] = 'IPI';
+            $isSpam++;
+            $this->addLogEntry('munin-graph.log','IPISPAM');
+        } else {
+            $this->addLogEntry('munin-graph.log','IPIHAM');
+        }
+      }
 
     ## to test the comparison code below
 /*

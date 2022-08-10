@@ -234,6 +234,10 @@ END;
         $email = $_POST['email'];
 
         if (!empty($pageData['captcha_include']) && $this->captchaEnabled()) {
+            if (empty($_POST['captcha_code'])) {
+                return getConfig('captcha_captcha_prompt');
+            }
+
             if ($r = $this->validateCaptcha($email, $_POST['captcha_code'])) {
                 return $r;
             }

@@ -40,6 +40,7 @@ For advice on configuring and using the plugin see the documentation page <https
 ## Version history ##
 
     version         Description
+    2.4.0+20220810  Avoid displaying Captcha on preferences page
     2.3.0+20220625  Update the Botbouncer class
     2.2.3+20220310  Ensure that the response from stopforumspam is serialised as expected.
     2.2.2+20220220  Change default for "include on subscribe page" to be false

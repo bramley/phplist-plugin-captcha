@@ -96,8 +96,6 @@ END;
     {
         global $tmpdir;
 
-        require_once $this->coderoot . 'botbouncer.php';
-
         $bb = new Botbouncer();
         $bb->setLogRoot($tmpdir);
         $params = array(

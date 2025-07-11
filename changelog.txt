@@ -1,3 +1,7 @@
+version 2.4.1+20250711
+      Use a class map to load the BotBouncer class
+      Refer to GitHub instead of the defunct Securimage website
+
 version 2.4.0+20220810
       Validate that a captcha value has been entered
       Display captcha only on subscribe page, and validate only for POST on subscribe and asubscribe pages.

@@ -3,7 +3,7 @@
 ## Description ##
 
 This plugin provides a CAPTCHA field on subscription forms using the
-<a href="https://www.phpcaptcha.org" target="_blank">Secureimage</a> package.
+<a href="https://github.com/dapphp/securimage" target="_blank">Secureimage</a> package.
 
 ## Installation ##
 
@@ -12,18 +12,15 @@ This plugin provides a CAPTCHA field on subscription forms using the
 Requires php version 5.4 or later and the php GD extension to be installed.
 
 Requires the Securimage package to be installed.
-Also requires Common Plugin to be installed,  see <https://github.com/bramley/phplist-plugin-common>
-
-### Set the plugin directory ###
-You can use a directory outside of the web root by changing the definition of `PLUGIN_ROOTDIR` in config.php.
-The benefit of this is that plugins will not be affected when you upgrade phplist.
+Also requires Common Plugin to be installed. That is now included in phplist so you should only need to enable it.
+See <https://github.com/bramley/phplist-plugin-common>
 
 ### Install through phplist ###
 Install on the Plugins page (menu Config > Plugins) using the package URL
 `https://github.com/bramley/phplist-plugin-captcha/archive/master.zip`
 
 ### Install Securimage ###
-You also need to install the Securimage package from <https://www.phpcaptcha.org/download/>
+You also need to install the Securimage package from <https://github.com/dapphp/securimage/releases/tag/3.6.8>
 
 Expand the zip file, then copy the securimage directory to your web site.
 
@@ -40,6 +37,7 @@ For advice on configuring and using the plugin see the documentation page <https
 ## Version history ##
 
     version         Description
+    2.4.1+20250711  Update URLs for Securimage
     2.4.0+20220810  Avoid displaying Captcha on preferences page
     2.3.0+20220625  Update the Botbouncer class
     2.2.3+20220310  Ensure that the response from stopforumspam is serialised as expected.
